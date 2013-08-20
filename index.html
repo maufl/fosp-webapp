@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel='stylesheet' href='./css/bootstrap.css'></link>
+<script type='text/javascript' src='./js/jquery-2.0.3.min.js'></script>
+<script type='text/javascript' src='./js/knockout-2.3.0.js'></script>
+<script type='text/javascript' src='./js/bootstrap.js'></script>
+<script type='text/javascript' src='./js/require.js' data-main='./js/app'></script>
+<style>
+  html, body {
+    height: 100%;
+  }
+  .page {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    background: whitesmoke;
+  }
+  .page.moving {
+    -webkit-transition: all 1s ease;
+  }
+  .page.moving.rolledup {
+    top: -2000px;
+    -webkit-transition: all 1s ease;
+  }
+  #side-bar {
+    background: #373737;
+    width: 150px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    padding: 10px;
+  }
+  #explorer {
+    background: #FFF;
+    width: 100%;
+    padding: 10px 10px 10px 160px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+  }
+  #login-form-container {
+    width: 350px;
+    margin-top: 50px;
+  }
+</style>
+<script type='text/javascript'>
+  $(function() {
+    $('#hide').on('click', function() {
+      $('#login-container').addClass('rolledup');
+    });
+  });
+</script>
+</head>
+<body>
+<div id='explorer-container' class='page'>
+    <div id='explorer'>
+    </div>
+    <div id='side-bar'>
+      <ul class="nav nav-pills nav-stacked">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="#">Profile</a></li>
+        <li><a href="#">Messages</a></li>
+      </ul>
+    </div>
+</div>
+<div id='login-container' class='page moving'>
+      <div class='container' id='login-form-container'>
+        <form class="form-horizontal" role="form">
+          <div class="form-group">
+            <label for="inputID1" class="col-lg-3 control-label">Identifier</label>
+            <div class="col-lg-9">
+              <input type="email" class="form-control" id="inputID1" placeholder="alice@wonderland.lit">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputPassword1" class="col-lg-3 control-label">Password</label>
+            <div class="col-lg-9">
+              <input type="password" class="form-control" id="inputPassword1" placeholder="Password">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-lg-offset-3 col-lg-9">
+              <button type="submit" class="btn btn-default" id='hide'>Sign in</button>
+            </div>
+          </div>
+        </form>
+      </div>
+</div>
+</body>
+</html>
