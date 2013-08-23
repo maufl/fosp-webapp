@@ -1,0 +1,52 @@
+html, body {
+  height: 100%;
+}
+
+.page {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  &.moving {
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  }
+  &.moving.rolledup {
+  top: -2000px;
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  }
+}
+
+.pull-down {
+  position: absolute;
+  bottom: 0;
+}
+
+@mixin twocolumn-fixed-first($width) {
+  position: relative;
+  width: $width;
+  float: left;
+  height: 100%;
+}
+
+@mixin twocolumn-fixed-second() {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+@mixin tworow-fixed-first($height) {
+  position: relative;
+  height: $height;
+  overflow: hidden;
+}
+
+@mixin tworow-fixed-second($height) {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  margin-top: -$height;
+  padding-top: $height;
+}

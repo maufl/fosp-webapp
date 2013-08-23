@@ -2,91 +2,103 @@
 <html>
 <head>
 <link rel='stylesheet' href='./css/bootstrap.css'></link>
-<script type='text/javascript' src='./js/jquery-2.0.3.min.js'></script>
-<script type='text/javascript' src='./js/knockout-2.3.0.js'></script>
-<script type='text/javascript' src='./js/bootstrap.js'></script>
+<link rel='stylesheet' href='./css/main.css'></link>
 <script type='text/javascript' src='./js/require.js' data-main='./js/app'></script>
-<style>
-  html, body {
-    height: 100%;
-  }
-  .page {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    background: whitesmoke;
-  }
-  .page.moving {
-    -webkit-transition: all 1s ease;
-  }
-  .page.moving.rolledup {
-    top: -2000px;
-    -webkit-transition: all 1s ease;
-  }
-  #side-bar {
-    background: #373737;
-    width: 150px;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    padding: 10px;
-  }
-  #explorer {
-    background: #FFF;
-    width: 100%;
-    padding: 10px 10px 10px 160px;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-  }
-  #login-form-container {
-    width: 350px;
-    margin-top: 50px;
-  }
-</style>
-<script type='text/javascript'>
-  $(function() {
-    $('#hide').on('click', function() {
-      $('#login-container').addClass('rolledup');
-    });
-  });
+<script type='text/html' id='fosp-object-list'>
+  <div class='fosplist'>
+    <!-- ko foreach: children -->
+      <div class='fospobject' data-bind='click: $parent.select.bind($parent), css: { selected: $parent.selectedNode() === $data }'>
+        <div class='fospobject-head'>
+          <small data-bind='text: owner'></small>
+          <small data-bind='prettyTime: btime'></small>
+          <span class='edit-options pull-right'>
+          <button type='button' class='btn btn-default btn-xs' data-bind='click: startEdit'>
+            <span class='glyphicon glyphicon-pencil'></span>
+          </button>
+          <button type='button' class='btn btn-default btn-xs' data-bind='click: $parent.deleteChild.bind($parent)'>
+            <span class='glyphicon glyphicon-trash'></span>
+          </button>
+          </span>
+        </div>
+        <div class='fospobject-body'>
+          <span data-bind='visible: ! editing(), text: bodyString'></span>
+          <textarea data-bind='visible: editing, value: editingContent'></textarea>
+          <div class='btn-group' data-bind='visible: editing'>
+            <button type='button' class='btn btn-default btn-xs' data-bind='click: cancleEdit'><span class='glyphicon glyphicon-remove-sign'></span></button>
+            <button type='button' class='btn btn-default btn-xs' data-bind='click: commitEdit'><span class='glyphicon glyphicon-ok-sign'></span></button>
+          </div>
+        </div>
+      </div>
+    <!-- /ko -->
+    <div class='fospobject fospobject-new'>
+      <div class='fospobject-head'>
+        <small>Add content</small>
+        <button type='button' class='btn btn-default btn-xs pull-right' data-bind='click: createChild'><span class='glyphicon glyphicon-floppy-disk'></span></button>
+      </div>
+      <div class='fospobject-body'>
+        <textarea data-bind='value: newChildContent'></textarea>
+      </div>
+    </div>
+  </div>
+  <!-- ko with: selectedNode -->
+    <!-- ko template: { name: "fosp-object-list", data: $data } -->
+    <!-- /ko -->
+  <!-- /ko -->
 </script>
 </head>
 <body>
 <div id='explorer-container' class='page'>
-    <div id='explorer'>
-    </div>
     <div id='side-bar'>
       <ul class="nav nav-pills nav-stacked">
         <li class="active"><a href="#">Home</a></li>
         <li><a href="#">Profile</a></li>
         <li><a href="#">Messages</a></li>
       </ul>
+      <ul class='nav nav-pills pull-down'>
+        <li><a class='glyphicon glyphicon-log-out' data-bind='click: logout'></a></li>
+      </ul>
+    </div>
+    <div id='explorer' data-bind='with: currentRoot'>
+      <div id='explorer-head'>
+        <h2 data-bind='text: path'></h2>
+      </div>
+      <div id='explorer-body' data-bind='template: { name: "fosp-object-list", data: $data }'>
+      </div>
     </div>
 </div>
-<div id='login-container' class='page moving'>
-      <div class='container' id='login-form-container'>
-        <form class="form-horizontal" role="form">
-          <div class="form-group">
-            <label for="inputID1" class="col-lg-3 control-label">Identifier</label>
-            <div class="col-lg-9">
-              <input type="email" class="form-control" id="inputID1" placeholder="alice@wonderland.lit">
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="inputPassword1" class="col-lg-3 control-label">Password</label>
-            <div class="col-lg-9">
-              <input type="password" class="form-control" id="inputPassword1" placeholder="Password">
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-lg-offset-3 col-lg-9">
-              <button type="submit" class="btn btn-default" id='hide'>Sign in</button>
-            </div>
-          </div>
-        </form>
+<div id='login-container' class='page moving' data-bind='with: login, css: { rolledup: login.authenticated }' >
+  <div class='container' id='login-form-container'>
+    <span class='glyphicon glyphicon-globe' id='login-logo'></span>
+    <div class='alert alert-danger' style='display: none' data-bind='visible: registrationFailure, text: registrationFailure'></div>
+    <div class='alert alert-danger' style='display: none' data-bind='visible: authenticationFailure, text: authenticationFailure'></div>
+    <form class="form" role="form">
+      <div class="form-group" data-bind="css: { 'has-warn' : $parent.connectFailed, 'has-error': authenticationFailure }">
+        <label for="inputID" class="control-label">Full username</label>
+        <input data-bind='value: user' type="email" class="form-control" id="inputID" placeholder="alice@wonderland.lit">
       </div>
+      <div class="form-group" data-bind="css: { 'has-error' : authenticationFailure }">
+        <label for="inputPassword" class="control-label">Password</label>
+        <input data-bind='value: password' type="password" class="form-control" id="inputPassword" placeholder="Password">
+      </div>
+      <div class="form-group" data-bind='visible: signup, css: { "has-error": passwordsDiffer }'>
+        <label for="inputPasswordConfirm" class="control-label">Password confirmation</label>
+        <input data-bind='value: passwordConfirmation' type="password" class="form-control" id="inputPasswordConfirm" placeholder="Password">
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" data-bind='checked: signup'>Create new account
+        </label>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" data-bind='checked: autoLogin'>Automatically login
+        </label>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary pull-right" data-bind='text: signup() ? "Sign up" : "Sign in", click: $parent.connect.bind($parent)'></button>
+      </div>
+    </form>
+  </div>
 </div>
 </body>
 </html>

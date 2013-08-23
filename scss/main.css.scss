@@ -1,0 +1,77 @@
+@import "config";
+@import "layout";
+
+#side-bar {
+  background: #373737;
+  box-shadow: inset -6px 0 9px -8px black;
+  padding: 7px;
+  @include twocolumn-fixed-first($explorer-sidebar-width);
+}
+#explorer {
+  background: #FFF;
+  @include twocolumn-fixed-second();
+}
+#explorer-head {
+  background: #e0e0e0;
+  border-bottom: 1px solid rgb(180, 180, 180);
+  padding: 7px;
+  @include tworow-fixed-first($explorer-head-height);
+}
+#explorer-head h2 {
+  margin: 5px;
+}
+#explorer-body {
+  @include tworow-fixed-second($explorer-head-height);
+}
+#login-form-container {
+  width: 350px;
+  margin-top: 50px;
+  position: relative;
+}
+#login-logo {
+  font-size: 60px;
+  margin: 10px auto;
+  display: block;
+  width: 65px;
+}
+.fospobject {
+  border-bottom: 1px solid rgb(216, 216, 216);
+}
+
+.fospobject-new {
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.fosplist:hover .fospobject-new {
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.fospobject .edit-options {
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+.fospobject:hover .edit-options {
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.fospobject.selected {
+  border-right: 3px solid #428bca;
+  border-bottom: 1px solid #428bca;
+}
+
+.fospobject-head {
+  padding: 7px;
+  background: #F5f5f5;
+  border-bottom: 1px solid rgb(216, 216, 216);
+}
+.fospobject-body {
+  padding: 7px;
+}
+.fosplist {
+  width: 250px;
+  height: 100%;
+  float: left;
+}
