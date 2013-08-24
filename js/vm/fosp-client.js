@@ -37,6 +37,9 @@ define(['fosp/client','fosp/logger', 'knockout', 'vm/fosp-object', 'vm/login'], 
         self.login.authenticated(false)
         self.login.resetFailures()
       })
+      self.client.con.on('notification', function(msg) {
+        L.info('Recieved a notification, ' + msg.uri.toString() + ' was ' + msg.event)
+      })
     })
   }
 

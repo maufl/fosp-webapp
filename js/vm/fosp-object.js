@@ -2,8 +2,10 @@ define(['fosp/logger', 'knockout', 'knockout.mapping', 'moment'], function(logge
   var L = logger.forFile('vm/fosp-object')
 
   var stop = function(e) {
-    e.stopPropagation()
-    e.preventDefault()
+    if (typeof e === 'object' && e !== null && typeof e.stopPropagation === 'function') {
+      e.stopPropagation()
+      e.preventDefault()
+    }
   }
 
   var FospObject = function(con,path) {
