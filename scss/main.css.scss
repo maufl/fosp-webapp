@@ -1,27 +1,24 @@
 @import "config";
 @import "layout";
 
+.page {
+  background: white;
+}
+
 #side-bar {
   background: #373737;
   box-shadow: inset -6px 0 9px -8px black;
   padding: 7px;
-  @include twocolumn-fixed-first($explorer-sidebar-width);
-}
-#explorer {
-  background: #FFF;
-  @include twocolumn-fixed-second();
+  width: $explorer-sidebar-width;
 }
 #explorer-head {
   background: #e0e0e0;
   border-bottom: 1px solid rgb(180, 180, 180);
   padding: 7px;
-  @include tworow-fixed-first($explorer-head-height);
+  height: $explorer-head-height;
 }
 #explorer-head h2 {
   margin: 5px;
-}
-#explorer-body {
-  @include tworow-fixed-second($explorer-head-height);
 }
 #login-form-container {
   width: 350px;
@@ -39,13 +36,6 @@
 }
 
 .fospobject-new {
-  opacity: 0;
-  transition: all 0.3s ease;
-}
-
-.fosplist:hover .fospobject-new {
-  opacity: 1;
-  transition: all 0.3s ease;
 }
 
 .fospobject .edit-options {
@@ -71,7 +61,6 @@
   padding: 7px;
 }
 .fosplist {
-  width: 250px;
-  height: 100%;
-  float: left;
+  border-right: 1px solid rgb(216, 216, 216);
+  width: $explorer-column-width;
 }

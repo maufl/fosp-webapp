@@ -5,9 +5,9 @@
 <link rel='stylesheet' href='./css/main.css'></link>
 <script type='text/javascript' src='./js/require.js' data-main='./js/app'></script>
 <script type='text/html' id='fosp-object-list'>
-  <div class='fosplist'>
+  <div class='fosplist  flx-v scroll-x'>
     <!-- ko foreach: children -->
-      <div class='fospobject' data-bind='click: $parent.select.bind($parent), css: { selected: $parent.selectedNode() === $data }'>
+      <div class='fospobject ' data-bind='click: $parent.select.bind($parent), css: { selected: $parent.selectedNode() === $data }'>
         <div class='fospobject-head'>
           <small data-bind='text: owner'></small>
           <small data-bind='prettyTime: btime'></small>
@@ -47,8 +47,8 @@
 </script>
 </head>
 <body>
-<div id='explorer-container' class='page'>
-    <div id='side-bar'>
+<div id='explorer-container' class='page flx-h'>
+    <div id='side-bar' class=''>
       <ul class="nav nav-pills nav-stacked">
         <li class="active"><a href="#">Home</a></li>
         <li><a href="#">Profile</a></li>
@@ -58,11 +58,11 @@
         <li><a class='glyphicon glyphicon-log-out' data-bind='click: logout'></a></li>
       </ul>
     </div>
-    <div id='explorer' data-bind='with: currentRoot'>
-      <div id='explorer-head'>
+    <div id='explorer' data-bind='with: currentRoot' class=' flx-strech flx-v'>
+      <div id='explorer-head' class=''>
         <h2 data-bind='text: path'></h2>
       </div>
-      <div id='explorer-body' data-bind='template: { name: "fosp-object-list", data: $data }'>
+      <div id='explorer-body' class='flx-strech flx-h scroll-y' data-bind='template: { name: "fosp-object-list", data: $data }'>
       </div>
     </div>
 </div>
