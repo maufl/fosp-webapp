@@ -64,7 +64,7 @@ define(['fosp/client','fosp/logger', 'knockout', 'vm/fosp-object', 'vm/login'], 
     login.authenticationFailure('')
     this.client.con.sendAuthenticate({}, { name: name, password: login.password()}).on('succeded', function() {
       login.authenticated(true)
-      var root = (new FospObject(self.client.con, login.user())).load().loadChildren();
+      var root = (new FospObject(self.client.con, login.user())).load();
       self.currentRoot(root)
       login.saveSettings()
     }).on('failed', function(err) {

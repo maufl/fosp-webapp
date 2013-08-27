@@ -1,4 +1,4 @@
-define(['fosp/logger', 'knockout', 'knockout.mapping', 'moment'], function(logger, ko, mapping, moment) {
+define(['fosp/logger', 'knockout', 'knockout.mapping', 'moment', 'ko/array-find'], function(logger, ko, mapping, moment) {
   var L = logger.forFile('vm/fosp-object')
 
   var stop = function(e) {
@@ -38,6 +38,7 @@ define(['fosp/logger', 'knockout', 'knockout.mapping', 'moment'], function(logge
 
     this.newChildContent = ko.observable('')
   }
+
   FospObject.prototype.load = function() {
     var self = this
     self.con.sendSelect(self.path()).on('succeded', function(resp) {
@@ -48,22 +49,25 @@ define(['fosp/logger', 'knockout', 'knockout.mapping', 'moment'], function(logge
       self.acl(resp.body.acl);
       self.subscriptions(resp.body.subscriptions)
       self.state('loaded')
+      self.con.sendList(self.path()).on('succeded', function(resp) {
+        var childrenNames = resp.body
+        console.log('Recieved child names ' + childrenNames)
+        for (var i=0; i<childrenNames.length; i++) {
+          var childName = childrenNames[i]
+          if (self.children.find(function(node){ return node.name() === childName; }))
+            continue
+          var newChild = new FospObject(self.con, self.path() + '/' + childName)
+          self.children.push(newChild)
+        }
+        for (var i=0; i<self.children().length; i++) {
+          if (childrenNames.indexOf(self.children()[i]) < 0) {
+            console.log('Removing child ' + self.children()[i])
+            self.children.slice(i,1)
+          }
+        }
+      })
     })
     self.state('loading')
-    return this
-  }
-  FospObject.prototype.loadChildren = function() {
-    var self = this
-    self.con.sendList(self.path()).on('succeded', function(resp) {
-      self.children.removeAll()
-      var children = resp.body
-      for (var i=0; i<children.length; i++) {
-        var newPath = self.path() + '/' + children[i]
-        var newObj = new FospObject(self.con, newPath)
-        newObj.load()
-        self.children.push(newObj)
-      }
-    })
     return this
   }
 
@@ -71,7 +75,7 @@ define(['fosp/logger', 'knockout', 'knockout.mapping', 'moment'], function(logge
     var name = this.path() + '/' + moment().toISOString(), self = this, content = this.newChildContent()
     self.con.sendCreate(name, {}, { data: content }).on('succeded', function() {
       self.newChildContent('')
-      self.loadChildren()
+      self.load()
     }).on('failed', function(err) {
       L.error('Creating child failed: ' + err.body)
     })
@@ -82,15 +86,14 @@ define(['fosp/logger', 'knockout', 'knockout.mapping', 'moment'], function(logge
     self.con.sendDelete(node.path()).on('succeded', function() {
       if (self.selectedNode() === node)
         self.selectedNode(null)
-      self.loadChildren()
+      self.load()
     }).on('failed', function(err) {
       L.error('Failed to delete node ' + node.path() + ': ' + err.body)
     })
   }
   FospObject.prototype.select = function(node, e) {
-    console.log('Selecting node: ' + node.name() + ' in node ' + this.name())
     this.selectedNode(node)
-    node.loadChildren()
+    node.load()
     return this
   }
   FospObject.prototype.startEdit = function(d, e) {
