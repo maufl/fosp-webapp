@@ -1,4 +1,4 @@
-define(['fosp/client','fosp/logger', 'knockout', 'vm/fosp-object', 'vm/login'], function(Client, logger, ko, FospObject, Login) {
+define(['fosp/client','fosp/logger', 'knockout', 'vm/node', 'vm/login'], function(Client, logger, ko, Node, Login) {
   var L = logger.forFile('vm/fosp-client')
 
   var FospClient = function() {
@@ -64,8 +64,9 @@ define(['fosp/client','fosp/logger', 'knockout', 'vm/fosp-object', 'vm/login'], 
     login.authenticationFailure('')
     this.client.con.sendAuthenticate({}, { name: name, password: login.password()}).on('succeded', function() {
       login.authenticated(true)
-      var root = (new FospObject(self.client.con, login.user())).load();
+      var root = (new Node(self.client.con, login.user())).load(function() { root.children.load(function(){root.children.loadAllNodes()}) });
       self.currentRoot(root)
+      self.client.con.on('notification', function(ntf) { root.delegateNotification(ntf) })
       login.saveSettings()
     }).on('failed', function(err) {
       L.error('Authentication failed: ' + err.body)

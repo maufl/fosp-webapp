@@ -1,66 +1,177 @@
 @import "config";
 @import "layout";
+@import "loginform";
+@import "node";
+@import "compass/css3/images";
 
 .page {
-  background: white;
+  background: $gray0;
 }
 
 #side-bar {
-  background: #373737;
-  box-shadow: inset -6px 0 9px -8px black;
-  padding: 7px;
+  background: $sidebar-gray;
   width: $explorer-sidebar-width;
+  position: relative;
+  height: 100%;
+
+  .title {
+    height: 70px;
+    padding: 15px 10px;
+    h2 {
+      color: $gray2;
+      display: block;
+      margin: 0;
+    }
+  }
+}
+#explorer-container {
+  @include background(linear-gradient($background0, $background1));
 }
 #explorer-head {
-  background: #e0e0e0;
-  border-bottom: 1px solid rgb(180, 180, 180);
-  padding: 7px;
-  height: $explorer-head-height;
+  border-bottom: 1px solid $border-gray;
+  padding: 24px;
+  height: $explorer-head-height + 1px;
+  background: $gray0;
+  h3 {
+    display: inline;
+    font-weight: bold;
+  }
+  & > * {
+    margin-right: 7px;
+    vertical-align: middle
+  }
 }
+#explorer-body {
+  background: $gray1;
+  overflow-y: hidden;
+}
+
 #explorer-head h2 {
   margin: 5px;
 }
-#login-form-container {
-  width: 350px;
-  margin-top: 50px;
-  position: relative;
-}
-#login-logo {
-  font-size: 60px;
-  margin: 10px auto;
-  display: block;
-  width: 65px;
-}
-.fospobject {
-  border-bottom: 1px solid rgb(216, 216, 216);
-}
-
-.fospobject-new {
-}
-
-.fospobject .edit-options {
-  opacity: 0;
-  transition: all 0.3s ease;
-}
-.fospobject:hover .edit-options {
-  opacity: 1;
-  transition: all 0.3s ease;
-}
-
-.fospobject.selected {
-  border-right: 3px solid #428bca;
-  border-bottom: 1px solid #428bca;
-}
-
-.fospobject-head {
-  padding: 7px;
-  background: #F5f5f5;
-  border-bottom: 1px solid rgb(216, 216, 216);
-}
-.fospobject-body {
-  padding: 7px;
-}
-.fosplist {
-  border-right: 1px solid rgb(216, 216, 216);
+.node-list {
   width: $explorer-column-width;
+}
+
+.popover {
+  padding: 0;
+  &.bottom .arrow:after {
+    border-bottom-color: #f7f7f7 !important;
+  }
+  .popover-title {
+    padding: 4px 7px;
+  }
+  .popover-content {
+    padding: 4px 7px;
+    dl {
+      margin: 0;
+      padding: 0;
+    }
+  }
+}
+
+ul.nav-list {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+
+  li {
+    padding-left: 20px;
+    list-style: none;
+  }
+  li, li > a {
+    line-height: 2.5em;
+    font-size: 14px;
+    font-weight: bold;
+    color: $gray3;
+    text-decoration: none;
+  }
+
+  li.selected > a, li:hover > a {
+    color: $petrol2;
+  }
+
+  li.selected {
+    border-right: 5px solid $petrol2;
+  }
+
+  li.nav-label {
+    color: $gray4;
+    background: $gray8;
+    text-transform: uppercase;
+  }
+
+  &.nav-list-vertical {
+    text-align: center;
+    li {
+      padding: 0 0.75em;
+      display: inline;
+    }
+  }
+}
+
+dl.acl-list {
+  color: $gray6;
+  dt {
+    font-size: 13px;
+  }
+  dd {
+    margin-bottom: 5px;
+    table {
+      margin-left: 5px;
+      width: 100%;
+      tr {
+        font-size: 0.8em;
+        td, th {
+          padding: 4px;
+          * {
+            vertical-align: middle;
+          }
+          input[type='checkbox'] {
+            margin-top: 0;
+          }
+        }
+        th {
+          color: $gray4;
+          //font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+dl.subscriptions-list {
+  color: $gray6;
+  dt {
+    font-size: 13px;
+  }
+  dd {
+    margin-bottom: 5px;
+    font-size: 0.8em;
+    label {
+      color: $gray4;
+    }
+    input[type='number'] {
+      width: 3em;
+      height: 2em;
+    }
+  }
+}
+.popover-content {
+  input[type='email'], input[type='number'] {
+    padding: 2px 4px;
+  }
+  button.close {
+    font-size: 15px;
+  }
+}
+.inset-rounded {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 8px -1px;
+  overflow: hidden;
 }

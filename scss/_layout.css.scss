@@ -36,19 +36,24 @@ html, body {
 }
 
 .flx-h, .flx-v {
-  @include display-box();
-  @include box-align(stretch);
-  @include box-lines(single);
+  display: flex;
+  flex-wrap: nowrap;
 }
 
 .flx-h {
-  @include box-orient(horizontal);
+  flex-direction: row;
 }
 
 .flx-v {
-  @include box-orient(vertical);
+  flex-direction: column;
 }
 
 .flx-strech {
-  @include box-flex(1);
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.flx-nostrech {
+  flex-grow: 0;
+  flex-shrink: 0;
 }
