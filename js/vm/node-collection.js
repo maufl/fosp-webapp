@@ -67,8 +67,8 @@ define(['require', 'fosp/logger', 'fosp/uri', 'knockout', 'vm/node', 'vm/notific
     for (var i=0; i<list.length; i++) {
       var name = list[i], newNode = new Node(this.con, this.basePath + '/' + name)
       this.all.push(newNode)
-      newNode.on('deleted', function() {
-        self.remove([name])
+      newNode.on('deleted', function(node) {
+        self.remove(node.name)
       })
     }
   }

@@ -63,10 +63,11 @@ define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-ac
   Node.prototype = Object.create(EventEmitter.prototype)
 
   Node.prototype.fromObject = function(object) {
-    this.data(object.data)
+    if (object.data)
+      this.data(object.data)
     this.btime(moment(object.btime));
     this.mtime(moment(object.mtime));
-    this.owner(object.owner);
+    this.owner(object.owner); 
     if (object.acl)
       this.acl.load(object.acl)
     if (object.subscriptions)
@@ -100,7 +101,7 @@ define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-ac
       L.warn('Delete failed ' + resp.status + ': ' + resp.body)
       N.add({title: 'Remove failed', text: 'Could not remove node: ' + resp.body, type: 'error', icon: 'flash'})
     })
-    this.emit('deleted')
+    this.emit('deleted', this)
   }
 
   Node.prototype.startEdit = function(d, e) {
@@ -132,7 +133,7 @@ define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-ac
   }
   Node.prototype.delegateNotification = function(ntf) {
     if (this.path === ntf.uri.toString())
-      this.emit(ntf.event.toLowerCase(), ntf)
+      this.emit(ntf.event.toLowerCase(), this, ntf)
     if (URI.ancestorOf(this.path, ntf.uri.toString()))
       this.children.delegateNotification(ntf)
   }
