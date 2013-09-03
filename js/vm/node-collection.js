@@ -1,5 +1,6 @@
-define(['require', 'fosp/logger', 'fosp/uri', 'knockout', 'vm/node'], function(require, logger, URI, ko, Node) {
+define(['require', 'fosp/logger', 'fosp/uri', 'knockout', 'vm/node', 'vm/notifications'], function(require, logger, URI, ko, Node, Notifications) {
   var L = logger.forFile('vm/node-collection')
+  var N = Notifications.getDefault()
 
   var guid = function() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -107,8 +108,10 @@ define(['require', 'fosp/logger', 'fosp/uri', 'knockout', 'vm/node'], function(r
         self.loadAllNodes()
       })
       self.newNodeContent('')
+      N.add({title: 'Added', text: 'Successfully added new node', type: 'success', icon: 'plus'})
     }).on('failed', function(resp) {
       L.warn('Creating new node failed, reason ' + resp.status + ': ' + resp.body)
+      N.add({title: 'Adding failed', text: 'Could not add new node: ' + resp.body, type: 'error', icon: 'flash'})
     })
   }
 

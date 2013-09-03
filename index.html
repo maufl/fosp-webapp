@@ -118,16 +118,36 @@
 </script>
 </head>
 <body>
+<div class='system-notifications' data-bind='with: notifications'>
+  <!-- ko foreach: { data: all, beforeRemove: fadeOut } -->
+    <div class='notification' data-bind='mouseenter: $parent.stopTimeout.bind($parent), mouseleave: $parent.startTimeout.bind($parent)'>
+      <div class='notification-head' data-bind='css: "notification-" + type'>
+        <span class='glyphicon' data-bind='if: icon, css: "glyphicon-" + icon'></span>
+        <span data-bind="if: title, text: title"></span>
+        <button type="button" data-bind="click: $parent.remove.bind($parent)" class="close pull-right" aria-hidden="true">&times;</button>
+      </div>
+      <div class='notification-body'>
+        <div data-bind='text: text'></div>
+      </div>
+    </div>
+  <!-- /ko -->
+</div>
 <div id='explorer-container' class='page'>
   <div class="inset-rounded flx-h">
-    <div id='side-bar' class=''>
+    <div id='side-bar' data-bind='muxSelect: "li:not(.no-select)"'>
       <div class='title'>
         <h2><span class="glyphicon glyphicon-globe"></span>&nbsp;fosp</h2>
       </div>
       <ul class="nav-list">
-        <li class="nav-label">Home</li>
-        <li><a href="#">Profile</a></li>
-        <li><a href="#">Messages</a></li>
+        <li class="nav-label no-select">Places</li>
+        <li class='selected flx-h' data-bind='click: loadHome.bind($data)'><span class='glyphicon glyphicon-home'></span><a href="#">Home</a></li>
+      </ul>
+      <ul class="nav-list" data-bind='with: buddyList'>
+        <li class="nav-label no-select">Buddys</li>
+        <!-- ko foreach: { data: all, as: 'buddy' } -->
+          <li data-bind='click: $root.loadBuddy.bind($root)'><a href="#" data-bind='text: buddy'></a></li>
+        <!-- /ko -->
+        <li class='no-select'><input type='email' placeholder='Add buddy' class='form-control input-sm' data-bind='value: newBuddy, key: { event: "press", callback: addBuddy.bind($data), code: 13 }' /></li>
       </ul>
       <ul class='nav-list nav-list-vertical pull-down'>
         <li><a class='glyphicon glyphicon-log-out' data-bind='click: logout'></a></li>

@@ -1,5 +1,7 @@
-define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-acl', 'vm/node-subscriptions', 'moment', 'EventEmitter'], function(logger, URI, ko, NodeCollection, NodeAcl, NodeSubscriptions, moment, EventEmitter) {
+define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-acl', 'vm/node-subscriptions', 'vm/notifications', 'moment', 'EventEmitter'],
+    function(logger, URI, ko, NodeCollection, NodeAcl, NodeSubscriptions, Notifications, moment, EventEmitter) {
   var L = logger.forFile('vm/node')
+  var N = Notifications.getDefault()
 
   var stop = function(e) {
     if (typeof e === 'object' && e !== null && typeof e.stopPropagation === 'function') {
@@ -76,17 +78,27 @@ define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-ac
     self.con.sendSelect(self.path).on('succeded', function(resp) {
       self.fromObject(resp.body)
       self.state('loaded')
+      self.emit('loaded')
       if (typeof callback === 'function')
         callback()
+    }).on('failed', function(resp) {
+      self.emit('loading-failed', resp)
+      console.log('Loading of node ' + self.path + ' failed: ' + resp.body)
+    }).on('timeout', function() {
+      self.emit('loading-timeout')
     })
     self.state('loading')
+    self.emit('loading')
     return this
   }
 
   Node.prototype.trash = function(d, e) {
     stop(e)
-    this.con.sendDelete(this.path).on('failed', function(resp) {
+    this.con.sendDelete(this.path).on('succeded', function() {
+      N.add({title: 'Removed', text: 'Successfully removed node', type: 'success', icon: 'minus'})
+    }).on('failed', function(resp) {
       L.warn('Delete failed ' + resp.status + ': ' + resp.body)
+      N.add({title: 'Remove failed', text: 'Could not remove node: ' + resp.body, type: 'error', icon: 'flash'})
     })
     this.emit('deleted')
   }
@@ -108,8 +120,10 @@ define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-ac
     self.con.sendUpdate(this.path, {}, { data: content }).on('succeded', function() {
       self.cancleEdit()
       self.load()
+      N.add({title: 'Edited', type: 'success', text: 'Edit successful', icon: 'pencil'})
     }).on('failed', function(err) {
       L.error('Update failed: ' + err.body)
+      N.add({title: 'Failed', type: 'error', text: 'Edit failed: ' + err.body, icon: 'flash'})
     })
   }
   Node.prototype.cancleEdit = function(d, e) {

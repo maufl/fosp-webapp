@@ -1,4 +1,4 @@
-define(['fosp/client','fosp/logger', 'knockout', 'vm/node', 'vm/login'], function(Client, logger, ko, Node, Login) {
+define(['fosp/client','fosp/logger', 'knockout', 'vm/node', 'vm/login', 'vm/notifications', 'vm/buddy-list'], function(Client, logger, ko, Node, Login, Notifications, BuddyList) {
   var L = logger.forFile('vm/fosp-client')
 
   var FospClient = function() {
@@ -7,6 +7,8 @@ define(['fosp/client','fosp/logger', 'knockout', 'vm/node', 'vm/login'], functio
     this.connectFailed = ko.observable(false);
     this.currentRoot = ko.observable(null);
     this.login = new Login()
+    this.notifications = Notifications.getDefault();
+    this.buddyList = new BuddyList()
     if (this.login.autoLogin())
       this.connect()
   }
@@ -23,6 +25,7 @@ define(['fosp/client','fosp/logger', 'knockout', 'vm/node', 'vm/login'], functio
     self.client.on('connect', function() {
       self.client.con.sendConnect({}, { version: '0.1' }).on('succeded', function() {
         self.connected(true)
+        self.notifications.add({title: 'Connected', text: 'Successfully connected to server "' + domain + '".', icon: 'globe'})
         if (login.signup())
           self.register()
         else
@@ -64,13 +67,31 @@ define(['fosp/client','fosp/logger', 'knockout', 'vm/node', 'vm/login'], functio
     login.authenticationFailure('')
     this.client.con.sendAuthenticate({}, { name: name, password: login.password()}).on('succeded', function() {
       login.authenticated(true)
-      var root = (new Node(self.client.con, login.user())).load(function() { root.children.load(function(){root.children.loadAllNodes()}) });
-      self.currentRoot(root)
-      self.client.con.on('notification', function(ntf) { root.delegateNotification(ntf) })
       login.saveSettings()
+      self.notifications.add({title: 'Authenticated', text: 'Successfully authenticated as user "' + name + '".', icon: 'user'})
+      self.loadHome()
     }).on('failed', function(err) {
       L.error('Authentication failed: ' + err.body)
       login.authenticationFailure(err.body)
+    })
+  }
+
+  FospClient.prototype.loadHome = function() {
+    this.loadBuddy(this.login.user())
+  }
+
+  FospClient.prototype.loadBuddy = function(buddy) {
+    var self = this
+    var root = (new Node(self.client.con, buddy)).load(function() { root.children.load(function(){root.children.loadAllNodes()}) });
+    root.on('loaded', function() {
+      self.currentRoot(root)
+      self.client.con.on('notification', function(ntf) { root.delegateNotification(ntf) })
+    })
+    root.on('loading-failed', function(resp) {
+      self.notifications.add({title: 'Load failed', text: 'Could not switch root to ' + buddy + ' : ' + resp.body, type: 'error', icon: 'flash' })
+    })
+    root.on('loading-timeout', function(resp) {
+      self.notifications.add({title: 'Load timeout', text: 'Could not switch root to ' + buddy + ', timed out', type: 'warn', icon: 'warning-sign', persistent: true })
     })
   }
 

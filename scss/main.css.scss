@@ -78,6 +78,19 @@ ul.nav-list {
   li {
     padding-left: 20px;
     list-style: none;
+
+    input[type='email'] {
+      margin: 5px 0;
+      height: 25px;
+      padding: 2px;
+      width: 95%;
+    }
+    a {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      display: block;
+    }
   }
   li, li > a {
     line-height: 2.5em;
@@ -174,4 +187,49 @@ dl.subscriptions-list {
   border-radius: 5px;
   box-shadow: 0 0 8px -1px;
   overflow: hidden;
+}
+.system-notifications {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 9001;
+
+  .notification {
+    position: relative;
+    display:block;
+    margin: 5px;
+    border-radius: 3px;
+    background-color: $gray0;
+    box-shadow: 0 0 8px -1px;
+    width: 150px;
+
+    .notification-head {
+      padding: 5px 5px 2px 5px;
+      font-size: 12px;
+      font-weight: bold;
+      color: $gray6;
+      border-bottom: 1px solid $border-gray;
+
+      button.close {
+        font-size: 16px;
+      }
+      &.notification-success {
+        color: $notification-green;
+      }
+      &.notification-warn {
+        color: $notification-yellow;
+      }
+      &.notification-error {
+        color: $notification-red;
+      }
+    }
+    .notification-body {
+      padding: 5px;
+      width: 100%;
+      font-size: 11px;
+      font-weight: bold;
+      color: $gray4;
+      text-align: center;
+    }
+  }
 }
