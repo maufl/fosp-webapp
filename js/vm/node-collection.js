@@ -49,12 +49,13 @@ define(['require', 'fosp/logger', 'fosp/uri', 'knockout', 'vm/node', 'vm/notific
 
   NodeCollection.prototype.remove = function(list) {
     var nodes = this.all()
-    L.info('List is ' + list)
     for (var i=0; i<nodes.length; i++) {
       var name = nodes[i].name
       var index = list.indexOf(name)
       if (index >= 0) {
         L.debug('Removing child ' + i + ' with name ' + name)
+        if (this.all()[i] === this.selectedNode())
+          this.selectedNode(null)
         this.all.splice(i,1)
       }
     }
