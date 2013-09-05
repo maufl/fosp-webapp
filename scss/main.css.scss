@@ -29,16 +29,23 @@
 }
 #explorer-head {
   border-bottom: 1px solid $border-gray;
-  padding: 24px;
   height: $explorer-head-height + 1px;
   background: $gray0;
-  h3 {
-    display: inline;
-    font-weight: bold;
+  .current-root {
+    padding: 24px;
+    h3 {
+      display: inline;
+      font-weight: bold;
+    }
+    & > * {
+      margin-right: 7px;
+      vertical-align: middle
+    }
   }
-  & > * {
-    margin-right: 7px;
-    vertical-align: middle
+  .user-menu {
+    border-left: 1px solid $border-gray;
+    height: 100%;
+    padding: 15px;
   }
 }
 #explorer-body {

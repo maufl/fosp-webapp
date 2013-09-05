@@ -163,11 +163,17 @@
       </ul>
     </div>
     <div id='explorer' data-bind='with: currentRoot' class='flx-strech flx-v'>
-      <div id='explorer-head'>
-        <span>Now on:</span>
-        <h3 data-bind='text: path'></h2>
-        <!-- ko template: 'acl-button' --><!-- /ko -->
-        <!-- ko template: 'subscriptions-button' --><!-- /ko -->
+      <div id='explorer-head' class='flx-nostrech'>
+        <div class='current-root pull-left'>
+          <span>Now on:</span>
+          <h3 data-bind='text: path'></h2>
+          <!-- ko template: 'acl-button' --><!-- /ko -->
+          <!-- ko template: 'subscriptions-button' --><!-- /ko -->
+        </div>
+        <div class='user-menu pull-right'>
+          <small>Welcome</small>
+          <div data-bind='text: $root.login.user'></div>
+        </div>
       </div>
       <div id='explorer-body' class='flx-strech flx-h scroll-x' data-bind='template: { name: "fosp-object-list", data: $data }'>
       </div>
