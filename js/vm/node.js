@@ -49,6 +49,8 @@ define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-ac
 
     // No proper way to display it yet
     this.bodyString = ko.computed(function() {
+      if (typeof this.data() === 'string')
+        return this.data()
       return JSON.stringify(this.data())
     }, this)
 
@@ -106,7 +108,7 @@ define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-ac
 
   Node.prototype.startEdit = function(d, e) {
     stop(e)
-    this.editingContent(JSON.stringify(this.data()))
+    this.editingContent(this.bodyString())
     this.editing(true)
   }
   Node.prototype.commitEdit = function(d, e) {
