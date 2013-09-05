@@ -1,0 +1,25 @@
+{
+  "name": "fosp-html5-client",
+  "version": "0.1.0",
+  "author": "Felix Maurer <Felix.Maurer@fsmi.uni-karlsruhe.de>",
+  "description": "A very basic FOSP html5 client",
+  "repository": {
+    "type": "git",
+    "url": "http://bitbucket.org/maufl/fosp-hmtl5-client.git"
+  },
+  "homepage": "http://bitbucket.org/maufl/fosp-html5-client.git",
+  "bugs": {
+    "email": "Felix.Maurer@fsmi.uni-karlsruhe.de",
+    "url": "https://bitbucket.org/maufl/fosp-html5-client/issues"
+  },
+  "keywords": [
+    "fosp"
+  ],
+  "dependencies": {
+    "fosp": "git+ssh://git@bitbucket.org:maufl/fosp.git"
+  },
+  "license": "GPL",
+  "os": ["linux"],
+  "private": true
+}
+

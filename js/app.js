@@ -5,7 +5,8 @@ require.config({
     bootstrap: 'bootstrap',
     knockout: 'knockout-2.3.0',
     moment: 'moment.min',
-    'jquery.pulse': 'jquery.pulse'
+    'jquery.pulse': 'jquery.pulse',
+    'fosp': '../node_modules/fosp/lib'
   },
   shim: {
     bootstrap: {
