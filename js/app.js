@@ -6,7 +6,8 @@ require.config({
     knockout: 'knockout-2.3.0',
     moment: 'moment.min',
     'jquery.pulse': 'jquery.pulse',
-    'fosp': '../node_modules/fosp/lib'
+    'fosp': '../node_modules/fosp/lib',
+    'filesaver': '../node_modules/FileSaver.js/FileSaver'
   },
   shim: {
     bootstrap: {
@@ -23,7 +24,7 @@ require.config({
     }
   }
 })
-require(['jquery', 'bootstrap', 'knockout', 'ko/time-helper', 'vm/fosp-client', 'ko/popover', 'ko/debug', 'ko/on', 'ko/3-state-checkbox', 'ko/mouse-events', 'ko/mux-select', 'ko/key-events'], function($, b, ko, helper, FospClient) {
+require(['jquery', 'bootstrap', 'knockout', 'ko/time-helper', 'vm/fosp-client', 'ko/popover', 'ko/debug', 'ko/on', 'ko/3-state-checkbox', 'ko/mouse-events', 'ko/mux-select', 'ko/key-events', 'ko/dnd'], function($, b, ko, helper, FospClient) {
   console.level = 'info'
   ko.applyBindings(new FospClient());
 })

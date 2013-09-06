@@ -29,6 +29,11 @@
             <td>write&nbsp;<input type='checkbox' data-bind='3-state-checkbox: { states: ["yes", "no", "inherit"], target: subscriptionsWrite }' /></td>
           </tr>
           <tr>
+            <th>Attachment</th>
+            <td>read&nbsp;<input type='checkbox' data-bind='3-state-checkbox: { states: ["yes", "no", "inherit"], target: attachmentRead }' /></td>
+            <td>write&nbsp;<input type='checkbox' data-bind='3-state-checkbox: { states: ["yes", "no", "inherit"], target: attachmentWrite }' /></td>
+          </tr>
+          <tr>
             <th>Child nodes</th>
             <td>read&nbsp;<input type='checkbox' data-bind='3-state-checkbox: { states: ["yes", "no", "inherit"], target: childrenRead }' /></td>
             <td>write&nbsp;<input type='checkbox' data-bind='3-state-checkbox: { states: ["yes", "no", "inherit"], target: childrenWrite }' /></td>
@@ -86,7 +91,7 @@
 <script type='text/html' id='fosp-object-list'>
   <div class='node-list flx-v scroll-y flx-nostrech' data-bind='with: children'>
     <!-- ko foreach: all -->
-      <div class='node flx-nostrech' data-bind='click: $parent.select.bind($parent), css: { selected: $parent.selectedNode() === $data }'>
+      <div class='node flx-nostrech' data-bind='click: $parent.select.bind($parent), css: { selected: $parent.selectedNode() === $data }, drop: { callback: uploadAttachment.bind($data) }, dragenter: { addClass: "dragover", preventDefault: true }, dragleave: { removeClass: "dragover", preventDefault: true }'>
         <div class='node-head' data-bind='on: { emitter: $data, event: "updated", pulse: { backgroundColor: "#b7dbd1" } }'>
           <small data-bind='text: owner'></small>
           <span class='edit-options pull-right'>
@@ -96,6 +101,7 @@
             <!-- /ko -->
             <span class='glyphicon glyphicon-pencil' data-bind='click: startEdit'></span>
             <span class='glyphicon glyphicon-trash' data-bind='click: trash'></span>
+            <span class='glyphicon glyphicon-cloud-download' data-bind='visible: attachment, click: downloadAttachment'></span>
           </span>
           <br />
           <span class='time'>created <span data-bind='prettyTime: btime'></span></span>
@@ -104,7 +110,7 @@
         <div class='node-body'>
           <span data-bind='visible: ! editing(), text: bodyString'></span>
           <textarea data-bind='visible: editing, value: editingContent'></textarea>
-          <div class='btn-group pull-right' data-bind='visible: editing'>
+          <div class='btn-group pull-right edit-buttons' data-bind='visible: editing'>
             <button type='button' class='btn btn-default btn-xs' data-bind='click: cancleEdit'><span class='glyphicon glyphicon-remove-sign'></span></button>
             <button type='button' class='btn btn-default btn-xs' data-bind='click: commitEdit'><span class='glyphicon glyphicon-ok-sign'></span></button>
           </div>

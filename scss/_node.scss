@@ -13,6 +13,7 @@
     opacity: 0;
     transition: all 0.3s ease;
     color: $gray7;
+    pointer-events: auto;
 
     &.selected {
       opacity: 1 !important;
@@ -36,6 +37,21 @@
     resize: vertical;
     border: 1px solid $border-gray;
     margin-bottom: 4px;
+    pointer-events: auto;
+  }
+  &.dragover {
+    border-right: 5px solid $petrol1;
+    .node-head {
+      border-top: 2px dashed $petrol1;
+      border-left: 2px dashed $petrol1;
+    }
+    .node-body {
+      border-bottom: 2px dashed $petrol1;
+      border-left: 2px dashed $petrol1;
+    }
+  }
+  * {
+    pointer-events: none;
   }
 }
 .node-head {
@@ -49,4 +65,8 @@
   padding: 5px;
   border-bottom: 1px solid $border-gray;
   border-left: 1px solid $border-gray;
+
+  .edit-buttons button {
+    pointer-events: auto;
+  }
 }

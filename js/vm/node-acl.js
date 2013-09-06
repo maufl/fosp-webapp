@@ -22,7 +22,9 @@ define(['jquery', 'knockout', 'knockout.mapping', 'EventEmitter'], function($, k
     subscriptionsWrite: 'inherit',
     childrenRead: 'inherit',
     childrenWrite: 'inherit',
-    childrenDelete: 'inherit'
+    childrenDelete: 'inherit',
+    attachmentRead: 'inherit',
+    attachmentWrite: 'inherit'
   }
 
   var NodeACL = function(con, path) {

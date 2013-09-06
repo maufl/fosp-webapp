@@ -1,5 +1,5 @@
-define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-acl', 'vm/node-subscriptions', 'vm/notifications', 'moment', 'EventEmitter'],
-    function(logger, URI, ko, NodeCollection, NodeAcl, NodeSubscriptions, Notifications, moment, EventEmitter) {
+define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-acl', 'vm/node-subscriptions', 'vm/notifications', 'moment', 'EventEmitter', 'filesaver'],
+    function(logger, URI, ko, NodeCollection, NodeAcl, NodeSubscriptions, Notifications, moment, EventEmitter, saveAs) {
   var L = logger.forFile('vm/node')
   var N = Notifications.getDefault()
 
@@ -32,6 +32,7 @@ define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-ac
     this.owner = ko.observable('');
     this.acl = new NodeAcl(this.con, this.path)
     this.subscriptions = new NodeSubscriptions(this.con, this.path)
+    this.attachment = ko.observable(null)
 
     this.children = new NodeCollection(con, path);
 
@@ -58,6 +59,7 @@ define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-ac
 
     // Handle updates
     this.on('updated', function(ntf) {
+      console.log(ntf)
       self.fromObject(ntf.body)
     })
   }
@@ -69,7 +71,8 @@ define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-ac
       this.data(object.data)
     this.btime(moment(object.btime));
     this.mtime(moment(object.mtime));
-    this.owner(object.owner); 
+    this.owner(object.owner);
+    this.attachment(object.attachment)
     if (object.acl)
       this.acl.load(object.acl)
     if (object.subscriptions)
@@ -133,9 +136,46 @@ define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-ac
     stop(e)
     this.editing(false)
   }
+
+  Node.prototype.uploadAttachment = function(e) {
+    var self = this, files = e.originalEvent.dataTransfer.files
+    if (files.length === 1) {
+      var file = files[0], fr = new FileReader()
+      fr.readAsArrayBuffer(file)
+      fr.onload = function(e) {
+        var buffer = e.target.result
+        console.log('Send WRITE request')
+        self.con.sendWrite(self.path, {}, buffer).on('succeded', function(resp) {
+          N.add({title: 'Attached', type: 'success', text: 'Attachment successfully uploaded', icon: 'cloud-upload'})
+          self.con.sendUpdate(self.path, {}, { attachment: { name: file.name, size: file.size, type: file.type } })
+        }).on('failed', function(resp) {
+          N.add({title: 'Failed', type: 'error', text: 'Attachment could not be uploaded: ' + resp.body, icon: 'flash' })
+        })
+      }
+    }
+    else {
+    }
+  }
+  Node.prototype.downloadAttachment = function() {
+    var self = this
+    self.con.sendRead(self.path).on('succeded', function(resp) {
+      N.add({title: 'Downloaded', type: 'success', text: 'Attachment successfully downloaded', icon: 'cloud-download' })
+      var blob = null
+      if (self.attachment() && self.attachment().type)
+        blob = new Blob([resp.body], { type: self.attachment().type })
+      else
+        blob = new Blob([resp.body])
+      if (self.attachment() && self.attachment().name)
+        saveAs(blob, self.attachment().name)
+      else
+        saveAs(blob)
+    }).on('failed', function(resp) {
+      N.add({title: 'Failed', type: 'error', text: 'Attachment could not be downloaded: ' + resp.body, icon: 'flash' })
+    })
+  }
   Node.prototype.delegateNotification = function(ntf) {
     if (this.path === ntf.uri.toString())
-      this.emit(ntf.event.toLowerCase(), this, ntf)
+      this.emit(ntf.event.toLowerCase(), ntf)
     if (URI.ancestorOf(this.path, ntf.uri.toString()))
       this.children.delegateNotification(ntf)
   }

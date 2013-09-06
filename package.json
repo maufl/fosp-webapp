@@ -16,7 +16,8 @@
     "fosp"
   ],
   "dependencies": {
-    "fosp": "git+ssh://git@bitbucket.org:maufl/fosp.git"
+    "fosp": "git+ssh://git@bitbucket.org:maufl/fosp.git",
+    "FileSaver.js": "git+ssh://git@github.com:k3ks/FileSaver.js.git"
   },
   "license": "GPL",
   "os": ["linux"],

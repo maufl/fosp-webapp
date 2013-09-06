@@ -34,11 +34,15 @@ define(['fosp/client','fosp/logger', 'knockout', 'vm/node', 'vm/login', 'vm/noti
         L.error('Connecting failed')
         self.connectFailed(true)
       })
-      self.client.con.on('close', function() {
+      self.client.con.on('close', function(e) {
         L.warn('Connection was closed')
+        console.debug(e)
         self.connected(false)
         self.login.authenticated(false)
         self.login.resetFailures()
+      })
+      self.client.con.on('error', function(err) {
+        L.error('Connection emitted error: ' + err)
       })
       self.client.con.on('notification', function(msg) {
         L.info('Recieved a notification, ' + msg.uri.toString() + ' was ' + msg.event)
