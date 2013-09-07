@@ -93,6 +93,7 @@
     <!-- ko foreach: all -->
       <div class='node flx-nostrech' data-bind='click: $parent.select.bind($parent), css: { selected: $parent.selectedNode() === $data }, drop: { callback: uploadAttachment.bind($data) }, dragenter: { addClass: "dragover", preventDefault: true }, dragleave: { removeClass: "dragover", preventDefault: true }'>
         <div class='node-head' data-bind='on: { emitter: $data, event: "updated", pulse: { backgroundColor: "#b7dbd1" } }'>
+          <span class='glyphicon glyphicon-paperclip' data-bind='visible: attachment'></span>
           <small data-bind='text: owner'></small>
           <span class='edit-options pull-right'>
             <!-- ko template: 'acl-button' -->
