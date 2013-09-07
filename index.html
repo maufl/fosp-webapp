@@ -96,6 +96,7 @@
           <span class='glyphicon glyphicon-paperclip' data-bind='visible: attachment'></span>
           <small data-bind='text: owner'></small>
           <span class='edit-options pull-right'>
+            <span class='glyphicon glyphicon-refresh' data-bind='click: load.bind($data)'></span>
             <!-- ko template: 'acl-button' -->
             <!-- /ko -->
             <!-- ko template: 'subscriptions-button' -->
