@@ -1,16 +1,14 @@
 define(['jquery', 'knockout'], function($, ko) {
   ko.bindingHandlers.drop = {
     init: function(element, optionsAccessor) {
-      var options = ko.unwrap(optionsAccessor()), callback = options.callback, preventDefault = (typeof options.preventDefault !== 'undefined')
+      var options = ko.unwrap(optionsAccessor()), callback = options.callback, removeClass = options.removeClass, preventDefault = (typeof options.preventDefault !== 'undefined')
       if (typeof callback !== 'function') {
         console.error('Tried to setup a drop binding but callback is not a function!')
         return
       }
-      $(element).on('dragover', function(e) {
-        e.stopPropagation()
-        e.preventDefault()
-      })
       $(element).on('drop', function(e) {
+        if (removeClass)
+          $(element).removeClass(removeClass)
         e.stopPropagation()
         e.preventDefault()
         callback(e)
