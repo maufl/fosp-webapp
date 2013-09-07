@@ -8,7 +8,7 @@ define(['knockout', 'jquery'], function(ko, $) {
         return
       }
       $(element).on('key'+event, function(e) {
-        if (e.charCode !== code)
+        if (e.which !== code)
           return
         if (typeof allBindings.value === 'function')
           allBindings.value($(element).val())
