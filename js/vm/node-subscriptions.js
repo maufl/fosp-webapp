@@ -105,7 +105,7 @@ define(['knockout', 'knockout.mapping', 'EventEmitter'], function(ko, map, Event
       return
     }
     this.writeBackTimeout = null
-    this.con.sendUpdate(this.path, {}, { subscriptions: this.store() }).on('succeded', function() {
+    this.con.sendUpdate(this.path, {}, { subscriptions: this.store() }).on('succeeded', function() {
       self.checksum = self.makeChecksum()
       console.log('successfully updated subscriptions')
     }).on('failed', function(resp) {

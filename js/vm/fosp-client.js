@@ -23,7 +23,7 @@ define(['fosp/client','fosp/logger', 'knockout', 'vm/node', 'vm/login', 'vm/noti
     this.connectFailed(false)
     this.client = new Client({host: domain})
     self.client.on('connect', function() {
-      self.client.con.sendConnect({}, { version: '0.1' }).on('succeded', function() {
+      self.client.con.sendConnect({}, { version: '0.1' }).on('succeeded', function() {
         self.connected(true)
         self.notifications.add({title: 'Connected', text: 'Successfully connected to server "' + domain + '".', icon: 'globe'})
         if (login.signup())
@@ -55,7 +55,7 @@ define(['fosp/client','fosp/logger', 'knockout', 'vm/node', 'vm/login', 'vm/noti
     var login = this.login
     var name = login.user().substring(0, this.login.user().indexOf('@'))
     login.registrationFailure('')
-    this.client.con.sendRegister({}, { name: name, password: login.password()}).on('succeded', function() {
+    this.client.con.sendRegister({}, { name: name, password: login.password()}).on('succeeded', function() {
       self.authenticate()
     }).on('failed', function(err) {
       L.error('Registration failed: ' + err.body)
@@ -69,7 +69,7 @@ define(['fosp/client','fosp/logger', 'knockout', 'vm/node', 'vm/login', 'vm/noti
     var name = login.user().substring(0, this.login.user().indexOf('@'))
     login.authenticated(false)
     login.authenticationFailure('')
-    this.client.con.sendAuthenticate({}, { name: name, password: login.password()}).on('succeded', function() {
+    this.client.con.sendAuthenticate({}, { name: name, password: login.password()}).on('succeeded', function() {
       login.authenticated(true)
       login.saveSettings()
       self.notifications.add({title: 'Authenticated', text: 'Successfully authenticated as user "' + name + '".', icon: 'user'})

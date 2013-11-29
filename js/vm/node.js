@@ -81,7 +81,7 @@ define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-ac
 
   Node.prototype.load = function(callback) {
     var self = this
-    self.con.sendSelect(self.path).on('succeded', function(resp) {
+    self.con.sendSelect(self.path).on('succeeded', function(resp) {
       self.fromObject(resp.body)
       self.state('loaded')
       self.emit('loaded')
@@ -100,7 +100,7 @@ define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-ac
 
   Node.prototype.trash = function(d, e) {
     stop(e)
-    this.con.sendDelete(this.path).on('succeded', function() {
+    this.con.sendDelete(this.path).on('succeeded', function() {
       N.add({title: 'Removed', text: 'Successfully removed node', type: 'success', icon: 'minus'})
     }).on('failed', function(resp) {
       L.warn('Delete failed ' + resp.status + ': ' + resp.body)
@@ -123,7 +123,7 @@ define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-ac
     catch (e) {
       content = this.editingContent()
     }
-    self.con.sendUpdate(this.path, {}, { data: content }).on('succeded', function() {
+    self.con.sendUpdate(this.path, {}, { data: content }).on('succeeded', function() {
       self.cancleEdit()
       self.load()
       N.add({title: 'Edited', type: 'success', text: 'Edit successful', icon: 'pencil'})
@@ -145,7 +145,7 @@ define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-ac
       fr.onload = function(e) {
         var buffer = e.target.result
         console.log('Send WRITE request')
-        self.con.sendWrite(self.path, {}, buffer).on('succeded', function(resp) {
+        self.con.sendWrite(self.path, {}, buffer).on('succeeded', function(resp) {
           N.add({title: 'Attached', type: 'success', text: 'Attachment successfully uploaded', icon: 'cloud-upload'})
           self.con.sendUpdate(self.path, {}, { attachment: { name: file.name, size: file.size, type: file.type } })
         }).on('failed', function(resp) {
@@ -158,7 +158,7 @@ define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-ac
   }
   Node.prototype.downloadAttachment = function() {
     var self = this
-    self.con.sendRead(self.path).on('succeded', function(resp) {
+    self.con.sendRead(self.path).on('succeeded', function(resp) {
       N.add({title: 'Downloaded', type: 'success', text: 'Attachment successfully downloaded', icon: 'cloud-download' })
       var blob = null
       if (self.attachment() && self.attachment().type)

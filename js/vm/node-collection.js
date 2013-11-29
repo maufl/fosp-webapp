@@ -27,7 +27,7 @@ define(['require', 'fosp/logger', 'fosp/uri', 'knockout', 'vm/node', 'vm/notific
 
   NodeCollection.prototype.load = function(callback) {
     var self = this
-    self.con.sendList(self.basePath).on('succeded', function(resp) {
+    self.con.sendList(self.basePath).on('succeeded', function(resp) {
       self.all.removeAll()
       self.add(resp.body)
       if (typeof callback === 'function')
@@ -37,7 +37,7 @@ define(['require', 'fosp/logger', 'fosp/uri', 'knockout', 'vm/node', 'vm/notific
 
   NodeCollection.prototype.refresh = function(callback) {
     var self = this
-    self.con.sendList(self.basePath).on('succeded', function(resp) {
+    self.con.sendList(self.basePath).on('succeeded', function(resp) {
       var list = resp.body
       var diff = self.diff(list)
       self.remove(diff[0])
@@ -104,7 +104,7 @@ define(['require', 'fosp/logger', 'fosp/uri', 'knockout', 'vm/node', 'vm/notific
 
   NodeCollection.prototype.addNode = function() {
     var newId = guid(), self = this
-    self.con.sendCreate(self.basePath + '/' + newId, {}, {data: self.newNodeContent()}).on('succeded', function() {
+    self.con.sendCreate(self.basePath + '/' + newId, {}, {data: self.newNodeContent()}).on('succeeded', function() {
       self.refresh(function() {
         self.loadAllNodes()
       })

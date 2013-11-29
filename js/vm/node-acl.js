@@ -105,7 +105,7 @@ define(['jquery', 'knockout', 'knockout.mapping', 'EventEmitter'], function($, k
       return
     }
     this.writeBackTimeout = null
-    this.con.sendUpdate(this.path, {}, { acl: this.store() }).on('succeded', function() {
+    this.con.sendUpdate(this.path, {}, { acl: this.store() }).on('succeeded', function() {
       self.checksum = self.makeChecksum()
       console.log('successfully updated acl')
     }).on('failed', function(resp) {
