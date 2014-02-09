@@ -98,6 +98,8 @@ html, body {
     pointer-events: none; }
   .node button {
     pointer-events: auto; }
+  .node input {
+    pointer-events: auto; }
 
 .node-head {
   padding: 5px;

@@ -16,6 +16,7 @@ define(['require', 'fosp/logger', 'fosp/uri', 'knockout', 'vm/node', 'vm/notific
     this.selectedNode = ko.observable(null)
 
     this.newNodeContent = ko.observable('')
+    this.newNodeName = ko.observable('')
   }
 
   NodeCollection.prototype.select = function(node) {
@@ -103,8 +104,13 @@ define(['require', 'fosp/logger', 'fosp/uri', 'knockout', 'vm/node', 'vm/notific
   }
 
   NodeCollection.prototype.addNode = function() {
-    var newId = guid(), self = this
-    self.con.sendCreate(self.basePath + '/' + newId, {}, {data: self.newNodeContent()}).on('succeeded', function() {
+    var self = this, newName = self.newNodeName(), newContent = self.newNodeContent()
+    if (typeof newName !== 'string' || newName === '')
+      newName = guid()
+    try {
+      newContent = JSON.parse(newContent)
+    } catch (e) { }
+    self.con.sendCreate(self.basePath + '/' + newName, {}, {data: newContent}).on('succeeded', function() {
       self.refresh(function() {
         self.loadAllNodes()
       })
