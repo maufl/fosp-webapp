@@ -31,7 +31,7 @@ define(['jquery', 'knockout', 'knockout.mapping', 'EventEmitter'], function($, k
     var self = this
     this.con = con
     this.path = path
-    this.all = ko.observableArray([])
+    this.users = ko.observableArray([])
     this.writeBackTimeout = null
     this.newUser = ko.observable('')
 
@@ -46,14 +46,16 @@ define(['jquery', 'knockout', 'knockout.mapping', 'EventEmitter'], function($, k
 
   NodeACL.prototype.load = function(acl) {
     var self = this
-    this.all.removeAll()
-    for (user in acl) {
-      if (acl[user] === null)
+    this.users.removeAll()
+    if (typeof acl.users != "object" || acl.users === null)
+      return
+    for (user in acl.users) {
+      if (acl.users[user] === null)
         continue
       var newACL = map.fromJS(aclTemplate)
       newACL.user(user)
-      for (var i=0; i<acl[user].length; i++) {
-        var right = acl[user][i]
+      for (var i=0; i<acl.users[user].length; i++) {
+        var right = acl.users[user][i]
         if (right.match(/^not-/)) {
           var negative = toCamelCase(right.substring(4))
           newACL[negative]('no')
@@ -67,28 +69,28 @@ define(['jquery', 'knockout', 'knockout.mapping', 'EventEmitter'], function($, k
       for (key in newACL)
         if (!key.match(/^__/))
           newACL[key].subscribe(function() { self.emit('changed') })
-      this.all.push(newACL)
+      this.users.push(newACL)
     }
     this.checksum = this.makeChecksum()
   }
 
   NodeACL.prototype.store = function() {
-    var acl = {}
-    for (var i=0; i<this.all().length; i++) {
-      var rights = this.all()[i]
+    var acl = {users: {}}
+    for (var i=0; i<this.users().length; i++) {
+      var rights = this.users()[i]
       var user = rights.user()
-      acl[user] = []
+      acl.users[user] = []
       if (rights._destroy) {
-        acl[user] = null
+        acl.users[user] = null
         continue
       }
       for (key in rights) {
         if (key === 'user' || key.match(/^__/))
           continue
         if (rights[key]() === 'yes')
-          acl[user].push(toSpinalCase(key))
+          acl.users[user].push(toSpinalCase(key))
         if (rights[key]() === 'no')
-          acl[user].push('not-' + toSpinalCase(key))
+          acl.users[user].push('not-' + toSpinalCase(key))
       }
     }
     return acl
@@ -123,12 +125,12 @@ define(['jquery', 'knockout', 'knockout.mapping', 'EventEmitter'], function($, k
     for (key in newACL)
       if (!key.match(/^__/))
         newACL[key].subscribe(function() { self.emit('changed') })
-    this.all.push(newACL)
+    this.users.push(newACL)
     this.newUser('')
   }
 
   NodeACL.prototype.remove = function(acl) {
-    this.all.destroy(acl)
+    this.users.destroy(acl)
     this.emit('changed')
   }
 

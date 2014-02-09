@@ -9,7 +9,7 @@
 </script>
 <script type='text/html' id='acl-popover-content'>
   <!-- ko if: acl -->
-    <dl data-bind='foreach: acl.all' class='acl-list'>
+    <dl data-bind='foreach: acl.users' class='acl-list'>
       <dt><span data-bind="text: user"></span><button type="button" data-bind="click: $parent.acl.remove.bind($parent.acl)" class="close pull-right" aria-hidden="true">&times;</button></dt>
       <dd>
         <table>
