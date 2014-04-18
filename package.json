@@ -5,19 +5,18 @@
   "description": "A very basic FOSP html5 client",
   "repository": {
     "type": "git",
-    "url": "http://bitbucket.org/maufl/fosp-hmtl5-client.git"
+    "url": "https://github.com/maufl/fosp-webapp.git"
   },
-  "homepage": "http://bitbucket.org/maufl/fosp-html5-client.git",
+  "homepage": "https://github.com/maufl/fosp-webapp.git",
   "bugs": {
     "email": "Felix.Maurer@fsmi.uni-karlsruhe.de",
-    "url": "https://bitbucket.org/maufl/fosp-html5-client/issues"
+    "url": "https://github.com/maufl/fosp-webapp/issues"
   },
   "keywords": [
     "fosp"
   ],
   "dependencies": {
-    "fosp": "git+ssh://git@bitbucket.org:maufl/fosp.git",
-    "FileSaver.js": "git+https://github.com/k3ks/FileSaver.js.git"
+    "fosp": "git+http://github.com/maufl/fosp.js.git"
   },
   "license": "GPL",
   "os": ["linux"],

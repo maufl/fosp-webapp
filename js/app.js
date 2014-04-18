@@ -7,7 +7,7 @@ require.config({
     moment: 'moment.min',
     'jquery.pulse': 'jquery.pulse',
     'fosp': '../node_modules/fosp/lib',
-    'filesaver': '../node_modules/FileSaver.js/FileSaver'
+    'filesaver': 'FileSaver'
   },
   shim: {
     bootstrap: {
