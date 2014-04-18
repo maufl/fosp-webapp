@@ -105,16 +105,20 @@ define(['require', 'fosp/logger', 'fosp/uri', 'knockout', 'vm/node', 'vm/notific
 
   NodeCollection.prototype.addNode = function() {
     var self = this, newName = self.newNodeName(), newContent = self.newNodeContent()
+    L.info(typeof newName)
+    L.info(newName)
     if (typeof newName !== 'string' || newName === '')
       newName = guid()
     try {
       newContent = JSON.parse(newContent)
     } catch (e) { }
+    L.info(newName)
     self.con.sendCreate(self.basePath + '/' + newName, {}, {data: newContent}).on('succeeded', function() {
       self.refresh(function() {
         self.loadAllNodes()
       })
       self.newNodeContent('')
+      self.newNodeName('')
       N.add({title: 'Added', text: 'Successfully added new node', type: 'success', icon: 'plus'})
     }).on('failed', function(resp) {
       L.warn('Creating new node failed, reason ' + resp.status + ': ' + resp.body)

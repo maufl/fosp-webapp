@@ -12,8 +12,7 @@ define(['jquery', 'knockout', 'knockout.mapping', 'EventEmitter'], function($, k
     })
   }
 
-  var aclTemplate = {
-    user: '',
+  var template = {
     dataRead: 'inherit',
     dataWrite: 'inherit',
     aclRead: 'inherit',
@@ -26,12 +25,19 @@ define(['jquery', 'knockout', 'knockout.mapping', 'EventEmitter'], function($, k
     attachmentRead: 'inherit',
     attachmentWrite: 'inherit'
   }
+  var userTemplate = $.extend({}, template)
+  userTemplate['user'] = ''
+  var groupTemplate = $.extend({}, template)
+  groupTemplate['group'] = ''
 
   var NodeACL = function(con, path) {
     var self = this
     this.con = con
     this.path = path
     this.users = ko.observableArray([])
+    this.groups = ko.observableArray([])
+    this.owner = ko.observable(null)
+    this.others = ko.observable(null)
     this.writeBackTimeout = null
     this.newUser = ko.observable('')
 
@@ -44,55 +50,87 @@ define(['jquery', 'knockout', 'knockout.mapping', 'EventEmitter'], function($, k
 
   NodeACL.prototype = Object.create(EventEmitter.prototype)
 
+  function mapPermissions(permissions) {
+    var newPermissions = map.fromJS(template)
+    if (typeof permissions.length !== 'number')
+      return newPermissions
+    for (var i=0; i<permissions.length; i++) {
+      var right = permissions[i]
+      if (right.match(/^not-/)) {
+        var negative = toCamelCase(right.substring(4))
+        newPermissions[negative]('no')
+      }
+      else {
+        var positive = toCamelCase(right)
+        newPermissions[positive]('yes')
+      }
+    }
+    return newPermissions
+  }
+
+  NodeACL.prototype.subscribePermissions = function(permissions) {
+    var self = this
+    for (key in permissions)
+      if (!key.match(/^__/))
+        permissions[key].subscribe(function() { self.emit('changed') })
+  }
+
   NodeACL.prototype.load = function(acl) {
     var self = this
     this.users.removeAll()
-    if (typeof acl.users != "object" || acl.users === null)
-      return
-    for (user in acl.users) {
-      if (acl.users[user] === null)
-        continue
-      var newACL = map.fromJS(aclTemplate)
-      newACL.user(user)
-      for (var i=0; i<acl.users[user].length; i++) {
-        var right = acl.users[user][i]
-        if (right.match(/^not-/)) {
-          var negative = toCamelCase(right.substring(4))
-          newACL[negative]('no')
-        }
-        else {
-          var positive = toCamelCase(right)
-          newACL[positive]('yes')
-        }
+    if (typeof acl.owner === 'undefined') {
+      this.owner(null)
+    } else {
+      this.owner(mapPermissions(acl.owner))
+      this.subscribePermissions(this.owner())
+    }
+    if (typeof acl.others === 'undefined') {
+      this.others(null)
+    } else {
+      this.others(mapPermissions(acl.others))
+      this.subscribePermissions(this.others())
+    }
+    if (typeof acl.users === "object" && acl.users !== null) {
+      for (user in acl.users) {
+        if (acl.users[user] === null)
+          continue
+        var newACL = mapPermissions(acl.users[user])
+        newACL['user'] = ko.observable(user)
+        this.subscribePermissions(newACL)
+        this.users.push(newACL)
       }
-      // setup notifications
-      for (key in newACL)
-        if (!key.match(/^__/))
-          newACL[key].subscribe(function() { self.emit('changed') })
-      this.users.push(newACL)
     }
     this.checksum = this.makeChecksum()
   }
 
+  function reverseMapPermissions(permissions) {
+    var newPermissions = []
+    for (key in permissions) {
+      if (key === 'user' || key === 'group' || key.match(/^__/))
+        continue
+      if (permissions[key]() === 'yes')
+        newPermissions.push(toSpinalCase(key))
+      if (permissions[key]() === 'no')
+        newPermissions.push('not-' + toSpinalCase(key))
+    }
+    return newPermissions
+  }
+
   NodeACL.prototype.store = function() {
-    var acl = {users: {}}
+    var acl = {owner: null, users: {}, groups: {}, others: null}
+    if (this.owner() !== null)
+      acl.owner = reverseMapPermissions(this.owner())
     for (var i=0; i<this.users().length; i++) {
       var rights = this.users()[i]
       var user = rights.user()
-      acl.users[user] = []
       if (rights._destroy) {
         acl.users[user] = null
-        continue
-      }
-      for (key in rights) {
-        if (key === 'user' || key.match(/^__/))
-          continue
-        if (rights[key]() === 'yes')
-          acl.users[user].push(toSpinalCase(key))
-        if (rights[key]() === 'no')
-          acl.users[user].push('not-' + toSpinalCase(key))
+      } else {
+        acl.users[user] = reverseMapPermissions(rights)
       }
     }
+    if (this.others() !== null)
+      acl.others = reverseMapPermissions(this.others())
     return acl
   }
 
@@ -119,14 +157,25 @@ define(['jquery', 'knockout', 'knockout.mapping', 'EventEmitter'], function($, k
     var self = this, user = this.newUser()
     if (!user.match(/.*@.*\..*/))
       return
-    var newACL = map.fromJS(aclTemplate)
+    var newACL = map.fromJS(userTemplate)
     newACL.user(user)
-    // setup notifications
-    for (key in newACL)
-      if (!key.match(/^__/))
-        newACL[key].subscribe(function() { self.emit('changed') })
+    this.subscribePermissions(newACL)
     this.users.push(newACL)
     this.newUser('')
+  }
+
+  NodeACL.prototype.addOwner = function() {
+    if (this.owner() === null) {
+      this.owner(map.fromJS(template))
+      this.subscribePermissions(this.owner())
+    }
+  }
+
+  NodeACL.prototype.addOthers = function() {
+    if (this.others() === null) {
+      this.others(map.fromJS(template))
+      this.subscribePermissions(this.others())
+    }
   }
 
   NodeACL.prototype.remove = function(acl) {
