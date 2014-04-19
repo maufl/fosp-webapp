@@ -1,0 +1,28 @@
+  <!-- ko if: acl -->
+    <dl data-bind='with: acl.owner' class='acl-list'>
+      <dt><span>Owner</span></dt>
+      <dd>
+      <!-- ko template: 'acl-table' --><!-- /ko -->
+      </dd>
+    </dl>
+    <a href='#' data-bind='click: acl.addOwner.bind(acl), ifnot: acl.owner'>Add owner rights</a>
+    <dl data-bind='foreach: acl.users' class='acl-list'>
+      <dt><span data-bind="text: user"></span><button type="button" data-bind="click: $parent.acl.remove.bind($parent.acl)" class="close pull-right" aria-hidden="true">&times;</button></dt>
+      <dd>
+      <!-- ko template: 'acl-table' --><!-- /ko -->
+      </dd>
+    </dl>
+    <form class="form-inline" role="form">
+      <div class="form-group">
+        <input type='email' class='form-control input-sm' data-bind='value: acl.newUser'>
+      </div>
+      <input type='submit' class='btn btn-default btn-sm' data-bind='click: acl.add.bind(acl)' value="Add">
+    </form>
+    <dl data-bind='with: acl.others' class='acl-list'>
+      <dt><span>Others</span></dt>
+      <dd>
+      <!-- ko template: 'acl-table' --><!-- /ko -->
+      </dd>
+    </dl>
+    <a href='#' data-bind='click: acl.addOthers.bind(acl), ifnot: acl.others'>Add public rights</a>
+  <!-- /ko -->

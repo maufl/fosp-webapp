@@ -25,6 +25,11 @@ require.config({
   }
 })
 require(['jquery', 'bootstrap', 'knockout', 'ko/time-helper', 'vm/fosp-client', 'ko/popover', 'ko/debug', 'ko/on', 'ko/3-state-checkbox', 'ko/mouse-events', 'ko/mux-select', 'ko/key-events', 'ko/dnd'], function($, b, ko, helper, FospClient) {
-  console.level = 'info'
+  console.level = 'info';
+  $('script[data-template-src]').each(function(i,e) {
+    $.get($(e).data('templateSrc'), function(tmpl) {
+      $(e).html(tmpl)
+    })
+  })
   ko.applyBindings(new FospClient());
 })

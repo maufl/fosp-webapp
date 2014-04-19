@@ -1,0 +1,30 @@
+<!-- ko if: subscriptions -->
+  <dl class='subscriptions-list' data-bind='foreach: subscriptions.all'>
+    <dt><span data-bind='text: user'></span><button type="button" data-bind="click: $parent.subscriptions.remove.bind($parent.subscriptions)" class="close pull-right" aria-hidden="true">&times;</button></dt>
+    <dd>
+      <form class='form-inline'>
+        <div class='form-group'>
+          <label>created <input type='checkbox' name='created' data-bind='checked: created' /></label>
+        </div>
+        <div class='form-group'>
+          <label>updated <input type='checkbox' name='updated' data-bind='checked: updated' /></label>
+        </div>
+        <div class='form-group'>
+          <label>deleted <input type='checkbox' name='deleted' data-bind='checked: deleted' /></label>
+        </div>
+        <br />
+        <div class='form-group'>
+          <label>depth</label>
+          <input type='number' min='-1' class='form-control input-sm' data-bind='value: depth' />
+        </div>
+      </form>
+    </dd>
+  </dl>
+  <form class="form-inline" role="form">
+    <div class="form-group">
+      <input type='email' class='form-control input-sm' data-bind='value: subscriptions.newUser'>
+    </div>
+    <input type='submit' class='btn btn-default btn-sm' data-bind='click: subscriptions.add.bind(subscriptions)' value="Add">
+  </form>
+<!-- /ko -->
+
