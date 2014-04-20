@@ -56,65 +56,6 @@ html, body {
   display: block;
   width: 65px; }
 
-.node {
-  border-right: 5px solid #d2d2d2;
-  margin: 5px 8px;
-  background: #fafafa;
-  border-radius: 3px;
-  overflow: hidden; }
-  .node.selected {
-    border-right: 5px solid #00ce9b; }
-  .node .edit-options > * {
-    opacity: 0;
-    transition: all 0.3s ease;
-    color: #3b3b3b;
-    pointer-events: auto; }
-    .node .edit-options > *.selected {
-      opacity: 1 !important;
-      color: #00ce9b;
-      transition: all 0.3s ease; }
-  .node:hover .edit-options > * {
-    opacity: 1;
-    transition: all 0.3s ease; }
-  .node .time {
-    font-size: 9px;
-    font-weight: bold;
-    color: dimgrey; }
-  .node textarea {
-    width: 100%;
-    resize: vertical;
-    border: 1px solid #d2d2d2;
-    margin-bottom: 4px;
-    pointer-events: auto; }
-  .node.dragover {
-    border-right: 5px solid #b7dbd1; }
-    .node.dragover .node-head {
-      border-top: 2px dashed #b7dbd1;
-      border-left: 2px dashed #b7dbd1; }
-    .node.dragover .node-body {
-      border-bottom: 2px dashed #b7dbd1;
-      border-left: 2px dashed #b7dbd1; }
-  .node * {
-    pointer-events: none; }
-  .node button {
-    pointer-events: auto; }
-  .node input {
-    pointer-events: auto; }
-
-.node-head {
-  padding: 5px;
-  background: #e6e6e6;
-  border-bottom: 1px solid #d2d2d2;
-  border-top: 1px solid #d2d2d2;
-  border-left: 1px solid #d2d2d2; }
-
-.node-body {
-  padding: 5px;
-  border-bottom: 1px solid #d2d2d2;
-  border-left: 1px solid #d2d2d2; }
-  .node-body .edit-buttons button {
-    pointer-events: auto; }
-
 .page {
   background: #fafafa; }
 
@@ -122,7 +63,8 @@ html, body {
   background: #4d4d4d;
   width: 200px;
   position: relative;
-  height: 100%; }
+  height: 100%;
+  box-shadow: -5px 0 20px -10px inset; }
   #side-bar .title {
     height: 70px;
     padding: 15px 20px; }
@@ -130,40 +72,6 @@ html, body {
       color: #e6e6e6;
       display: block;
       margin: 0; }
-
-#explorer-container {
-  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #78aeb0), color-stop(100%, #d8bd9c));
-  background: -webkit-linear-gradient(#78aeb0, #d8bd9c);
-  background: -moz-linear-gradient(#78aeb0, #d8bd9c);
-  background: -o-linear-gradient(#78aeb0, #d8bd9c);
-  background: linear-gradient(#78aeb0, #d8bd9c); }
-
-#explorer-head {
-  border-bottom: 1px solid #d2d2d2;
-  height: 71px;
-  background: #fafafa; }
-  #explorer-head .current-root {
-    padding: 24px; }
-    #explorer-head .current-root h3 {
-      display: inline;
-      font-weight: bold; }
-    #explorer-head .current-root > * {
-      margin-right: 7px;
-      vertical-align: middle; }
-  #explorer-head .user-menu {
-    border-left: 1px solid #d2d2d2;
-    height: 100%;
-    padding: 15px; }
-
-#explorer-body {
-  background: #f1f1f1;
-  overflow-y: hidden; }
-
-#explorer-head h2 {
-  margin: 5px; }
-
-.node-list {
-  width: 350px; }
 
 .popover {
   padding: 0; }
@@ -176,6 +84,49 @@ html, body {
     .popover .popover-content dl {
       margin: 0;
       padding: 0; }
+
+#tree-navigation {
+  padding: 25px 20px;
+  width: 250px;
+  scroll: auto;
+  background: #f1f1f1;
+  border-right: 1px solid #d2d2d2; }
+  #tree-navigation ul.tree, #tree-navigation ul.tree ul {
+    list-style-type: none;
+    background: url(images/vline.png) repeat-y;
+    margin: 0;
+    padding: 0; }
+  #tree-navigation ul.tree ul {
+    margin-left: 10px; }
+  #tree-navigation ul.tree li {
+    margin: 0;
+    padding: 0 12px;
+    line-height: 20px;
+    background: url(images/node.png) no-repeat; }
+  #tree-navigation ul.tree li:last-child {
+    background: #f1f1f1 url(images/lastnode.png) no-repeat; }
+  #tree-navigation li.new-node {
+    display: none; }
+  #tree-navigation li.new-node.selected {
+    display: block; }
+  #tree-navigation h3, #tree-navigation strong {
+    cursor: pointer; }
+    #tree-navigation h3.selected, #tree-navigation strong.selected {
+      color: #00ce9b; }
+  #tree-navigation h3 {
+    margin: 0 0 5px 0;
+    font-weight: bold; }
+
+#object-viewer {
+  margin: 25px 15px; }
+  #object-viewer h4 {
+    margin: 0 0 5px 0;
+    display: inline-block; }
+  #object-viewer .small-grey {
+    font-size: 0.8em;
+    color: #757575; }
+  #object-viewer .black {
+    color: black; }
 
 ul.nav-list {
   width: 100%;
@@ -261,16 +212,6 @@ dl.subscriptions-list {
   padding: 2px 4px; }
 .popover-content button.close {
   font-size: 15px; }
-
-.inset-rounded {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  bottom: 20px;
-  right: 20px;
-  border-radius: 5px;
-  box-shadow: 0 0 8px -1px;
-  overflow: hidden; }
 
 .system-notifications {
   position: fixed;

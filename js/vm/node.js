@@ -16,7 +16,7 @@ define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-ac
     this.path = path
     var tail = path.split('/').pop()
     if (tail === path || tail === '')
-      tail = '/'
+      tail = this.path
     this.name = tail
 
     this.data = ko.observable({})

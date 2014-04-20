@@ -1,7 +1,6 @@
 @import "config";
 @import "layout";
 @import "loginform";
-@import "node";
 @import "compass/css3/images";
 
 .page {
@@ -13,6 +12,7 @@
   width: $explorer-sidebar-width;
   position: relative;
   height: 100%;
+  box-shadow: -5px 0 20px -10px inset;
 
   .title {
     height: 70px;
@@ -23,41 +23,6 @@
       margin: 0;
     }
   }
-}
-#explorer-container {
-  @include background(linear-gradient($background0, $background1));
-}
-#explorer-head {
-  border-bottom: 1px solid $border-gray;
-  height: $explorer-head-height + 1px;
-  background: $gray0;
-  .current-root {
-    padding: 24px;
-    h3 {
-      display: inline;
-      font-weight: bold;
-    }
-    & > * {
-      margin-right: 7px;
-      vertical-align: middle
-    }
-  }
-  .user-menu {
-    border-left: 1px solid $border-gray;
-    height: 100%;
-    padding: 15px;
-  }
-}
-#explorer-body {
-  background: $gray1;
-  overflow-y: hidden;
-}
-
-#explorer-head h2 {
-  margin: 5px;
-}
-.node-list {
-  width: $explorer-column-width;
 }
 
 .popover {
@@ -74,6 +39,69 @@
       margin: 0;
       padding: 0;
     }
+  }
+}
+
+#tree-navigation {
+  padding: 25px 20px;
+  width: 250px;
+  scroll: auto;
+  background: $gray1;
+  border-right: 1px solid $border-gray;
+
+  ul.tree, ul.tree ul {
+    list-style-type: none;
+    background: url(images/vline.png) repeat-y;
+    margin: 0; padding: 0;
+  }
+  ul.tree ul {
+    margin-left: 10px;
+  }
+  ul.tree li {
+    margin: 0;
+    padding: 0 12px;
+    line-height: 20px;
+    background: url(images/node.png) no-repeat;
+  }
+  ul.tree li:last-child {
+    background: $gray1 url(images/lastnode.png) no-repeat;
+  }
+
+  li.new-node {
+    display: none;
+  }
+  li.new-node.selected {
+    display: block;
+  }
+
+  h3, strong {
+    cursor: pointer;
+    &.selected {
+      color: $petrol2;
+    }
+  }
+
+  h3 {
+    margin: 0 0 5px 0;
+    font-weight: bold;
+  }
+}
+
+#object-viewer {
+  margin: 25px 15px;
+
+  h4 {
+    margin: 0 0 5px 0;
+    display: inline-block;
+  }
+
+  .small-grey {
+    font-size: 0.8em;
+    color: $gray4;
+  }
+
+  .black {
+    color: black;
   }
 }
 
@@ -198,16 +226,7 @@ dl.subscriptions-list {
     font-size: 15px;
   }
 }
-.inset-rounded {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  bottom: 20px;
-  right: 20px;
-  border-radius: 5px;
-  box-shadow: 0 0 8px -1px;
-  overflow: hidden;
-}
+
 .system-notifications {
   position: fixed;
   top: 0;

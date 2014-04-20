@@ -6,6 +6,7 @@ define(['fosp/client','fosp/logger', 'knockout', 'vm/node', 'vm/login', 'vm/noti
     this.connected = ko.observable(false);
     this.connectFailed = ko.observable(false);
     this.currentRoot = ko.observable(null);
+    this.selectedNode = ko.observable(null);
     this.login = new Login()
     this.notifications = Notifications.getDefault();
     this.buddyList = new BuddyList()
@@ -101,6 +102,15 @@ define(['fosp/client','fosp/logger', 'knockout', 'vm/node', 'vm/login', 'vm/noti
 
   FospClient.prototype.logout = function() {
     this.client.con.close()
+  }
+
+  FospClient.prototype.select = function(node) {
+    if (node instanceof Node) {
+      if (!node.isLoaded()) {
+        node.load()
+      }
+      this.selectedNode(node)
+    }
   }
   return FospClient;
 })

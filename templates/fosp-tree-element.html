@@ -1,0 +1,16 @@
+<strong data-bind="text: name, click: $root.select.bind($root), css: { selected: $root.selectedNode() == $data }"></strong>
+<ul class="tree">
+  <!-- ko foreach: children.all -->
+  <li data-bind="template: { name: 'fosp-tree-element', data: $data }, click: children.load.bind(children), clickBubble: false"></li>
+  <!-- /ko -->
+  <!-- ko if: $root.selectedNode() == $data -->
+  <li>
+    <div class='input-group input-group-sm'>
+      <input type='text' class='form-control input-sm' data-bind='value: children.newNodeName' />
+      <span class='input-group-btn'>
+        <button type='button' class='btn btn-default' data-bind='click: children.addNode.bind(children), clickBubble: false'><span class='glyphicon glyphicon-ok-sign'></span></button>
+      </span>
+    </div>
+  </li>
+  <!-- /ko -->
+</ul>
