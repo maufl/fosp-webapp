@@ -22,7 +22,7 @@ define(['fosp/client','fosp/logger', 'knockout', 'vm/node', 'vm/login', 'vm/noti
     var identifier = this.login.user()
     var domain = identifier.substring(identifier.indexOf('@') + 1, identifier.length)
     this.connectFailed(false)
-    this.client = new Client({host: domain})
+    this.client = new Client({host: domain, scheme: 'wss'})
     self.client.on('connect', function() {
       self.client.con.sendConnect({}, { version: '0.1' }).on('succeeded', function() {
         self.connected(true)
@@ -90,6 +90,7 @@ define(['fosp/client','fosp/logger', 'knockout', 'vm/node', 'vm/login', 'vm/noti
     var root = (new Node(self.client.con, buddy)).load(function() { root.children.load(function(){root.children.loadAllNodes()}) });
     root.on('loaded', function() {
       self.currentRoot(root)
+      self.select(root)
       self.client.con.on('notification', function(ntf) { root.delegateNotification(ntf) })
     })
     root.on('loading-failed', function(resp) {
@@ -105,11 +106,17 @@ define(['fosp/client','fosp/logger', 'knockout', 'vm/node', 'vm/login', 'vm/noti
   }
 
   FospClient.prototype.select = function(node) {
+    var self = this
     if (node instanceof Node) {
       if (!node.isLoaded()) {
         node.load()
       }
       this.selectedNode(node)
+      node.on('deleted', function(deletedNode) {
+        if (self.selectedNode() == deletedNode) {
+          self.selectedNode(self.currentRoot())
+        }
+      })
     }
   }
   return FospClient;

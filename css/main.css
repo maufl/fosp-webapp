@@ -90,7 +90,8 @@ html, body {
   width: 250px;
   scroll: auto;
   background: #f1f1f1;
-  border-right: 1px solid #d2d2d2; }
+  border-right: 1px solid #d2d2d2;
+  overflow: hidden; }
   #tree-navigation ul.tree, #tree-navigation ul.tree ul {
     list-style-type: none;
     background: url(images/vline.png) repeat-y;
@@ -127,6 +128,21 @@ html, body {
     color: #757575; }
   #object-viewer .black {
     color: black; }
+  #object-viewer .edit-options {
+    cursor: pointer; }
+  #object-viewer .nav > li > a {
+    padding: 5px 7px;
+    color: #00ce9b;
+    background: #fafafa;
+    border-bottom: 1px solid #DDD; }
+  #object-viewer .nav > li.active > a {
+    border-bottom: 1px solid rgba(0, 0, 0, 0); }
+  #object-viewer .tab-content {
+    padding: 10px 20px; }
+    #object-viewer .tab-content textarea {
+      min-height: 200px;
+      width: 100%;
+      resize: vertical; }
 
 ul.nav-list {
   width: 100%;
@@ -215,7 +231,7 @@ dl.subscriptions-list {
 
 .system-notifications {
   position: fixed;
-  top: 0;
+  bottom: 0;
   right: 0;
   z-index: 9001; }
   .system-notifications .notification {

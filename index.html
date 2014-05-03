@@ -10,6 +10,9 @@
 <script type='text/html' id='subscriptions-button' data-template-src='templates/subscriptions-button.html'></script>
 <script type='text/html' id='subscriptions-popover-content' data-template-src='templates/subscriptions-popover-content.html'></script>
 <script type='text/html' id='fosp-tree-element' data-template-src='templates/fosp-tree-element.html'></script>
+<script type='text/html' id='object-viewer-data' data-template-src='templates/object-viewer-data.html'></script>
+<script type='text/html' id='object-viewer-acl' data-template-src='templates/object-viewer-acl.html'></script>
+<script type='text/html' id='object-viewer-subscriptions' data-template-src='templates/object-viewer-subscriptions.html'></script>
 </head>
 <body>
 <div class='system-notifications' data-bind='with: notifications'>
@@ -46,24 +49,10 @@
     </ul>
   </div>
   <div id='tree-navigation' data-bind='with: currentRoot'>
-    <h3 data-bind='text: name, click: $root.select.bind($root), css: { selected: $root.selectedNode() == $data }'></h3>
-    <ul class="tree">
-      <!-- ko foreach: children.all -->
-      <li data-bind="template: { name: 'fosp-tree-element', data: $data }, click: children.load.bind(children), clickBubble: false"></li>
-      <!-- /ko -->
-      <!-- ko if: $root.selectedNode() == $data -->
-      <li>
-        <div class='input-group input-group-sm'>
-          <input type='text' class='form-control input-sm' data-bind='value: children.newNodeName' />
-          <span class='input-group-btn'>
-            <button type='button' class='btn btn-default' data-bind='click: children.addNode.bind(children), clickBubble: false'><span class='glyphicon glyphicon-ok-sign'></span></button>
-          </span>
-        </div>
-      </li>
-      <!-- /ko -->
-    </ul>
+    <!-- ko template: { name: 'fosp-tree-element', data: $data } -->
+    <!-- /ko -->
   </div>
-  <div id='object-viewer' data-bind='with: selectedNode'>
+  <div id='object-viewer' data-bind='with: selectedNode' class='flx-strech'>
     <h4 data-bind='text: path'></h4>
     <span class='small-grey'>
       by
@@ -74,23 +63,20 @@
       &nbsp;&nbsp;
       <span class='edit-options pull-right'>
         <span class='glyphicon glyphicon-refresh' data-bind='click: load.bind($data)'></span>
-        <!-- ko template: 'acl-button' -->
-        <!-- /ko -->
-        <!-- ko template: 'subscriptions-button' -->
-        <!-- /ko -->
         <span class='glyphicon glyphicon-pencil' data-bind='click: startEdit'></span>
         <span class='glyphicon glyphicon-trash' data-bind='click: trash'></span>
         <span class='glyphicon glyphicon-cloud-download' data-bind='visible: attachment, click: downloadAttachment'></span>
       </span>
     </span>
-    <div>
-      <span data-bind='visible: ! editing(), text: bodyString'></span>
-      <textarea data-bind='visible: editing, value: editingContent'></textarea>
-      <div class='btn-group pull-right edit-buttons' data-bind='visible: editing'>
-        <button type='button' class='btn btn-default btn-xs' data-bind='click: cancleEdit'><span class='glyphicon glyphicon-remove-sign'></span></button>
-        <button type='button' class='btn btn-default btn-xs' data-bind='click: commitEdit'><span class='glyphicon glyphicon-ok-sign'></span></button>
-      </div>
-      <span class='clearfix'></span>
+    <ul class='nav nav-tabs'>
+      <li class='active'><a href='#object-tab-data' data-toggle='tab' data-bind='tab: true'>Data</a></li>
+      <li><a href='#object-tab-acl' data-toggle='tab' data-bind='tab: true'>Access control</a></li>
+      <li><a href='#object-tab-subscriptions' data-toggle='tab' data-bind='tab: true'>Subscriptions</a></li>
+    </ul>
+    <div class='tab-content'>
+      <!-- ko template: 'object-viewer-data' --><!-- /ko -->
+      <!-- ko template: 'object-viewer-acl' --><!-- /ko -->
+      <!-- ko template: 'object-viewer-subscriptions' --><!-- /ko -->
     </div>
   </div>
 </div>

@@ -1,0 +1,9 @@
+<div id='object-tab-data' class='tab-pane active'>
+  <span data-bind='visible: ! editing(), text: bodyString'></span>
+  <textarea data-bind='visible: editing, value: editingContent'></textarea>
+  <div class='btn-group pull-right edit-buttons' data-bind='visible: editing'>
+    <button type='button' class='btn btn-default btn-xs' data-bind='click: cancleEdit'><span class='glyphicon glyphicon-remove-sign'></span></button>
+    <button type='button' class='btn btn-default btn-xs' data-bind='click: commitEdit'><span class='glyphicon glyphicon-ok-sign'></span></button>
+  </div>
+  <span class='clearfix'></span>
+</div>

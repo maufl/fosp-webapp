@@ -102,11 +102,11 @@ define(['fosp/logger', 'fosp/uri', 'knockout', 'vm/node-collection', 'vm/node-ac
     stop(e)
     this.con.sendDelete(this.path).on('succeeded', function() {
       N.add({title: 'Removed', text: 'Successfully removed node', type: 'success', icon: 'minus'})
+      this.emit('deleted', this)
     }).on('failed', function(resp) {
       L.warn('Delete failed ' + resp.status + ': ' + resp.body)
       N.add({title: 'Remove failed', text: 'Could not remove node: ' + resp.body, type: 'error', icon: 'flash'})
     })
-    this.emit('deleted', this)
   }
 
   Node.prototype.startEdit = function(d, e) {
