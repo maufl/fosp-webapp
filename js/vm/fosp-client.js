@@ -22,7 +22,7 @@ define(['fosp/client','fosp/logger', 'knockout', 'vm/node', 'vm/login', 'vm/noti
     var identifier = this.login.user()
     var domain = identifier.substring(identifier.indexOf('@') + 1, identifier.length)
     this.connectFailed(false)
-    this.client = new Client({host: domain, scheme: 'wss'})
+    this.client = new Client({host: domain, scheme: login.insecure() ? 'ws' : 'wss'})
     self.client.on('connect', function() {
       self.client.con.sendConnect({}, { version: '0.1' }).on('succeeded', function() {
         self.connected(true)

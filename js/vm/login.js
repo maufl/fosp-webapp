@@ -12,6 +12,7 @@ define(['fosp/logger', 'knockout'], function(logger, ko) {
     }, this)
 
     this.autoLogin = ko.observable(false);
+    this.insecure = ko.observable(false)
 
     this.authenticated = ko.observable(false);
     this.authenticationFailure = ko.observable('')
